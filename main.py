@@ -9,7 +9,7 @@ from collections import defaultdict
 from whoosh import index
 from whoosh.analysis import StemmingAnalyzer
 from whoosh.fields import Schema, TEXT
-from whoosh.qparser import QueryParser
+from whoosh.qparser import MultifieldParser
 
 
 def create_index(archive_name_path, archive_data_path, target_dir):
@@ -22,7 +22,7 @@ def create_index(archive_name_path, archive_data_path, target_dir):
     table_names = [x.strip().split(",")[2] for x in iter_tables]
     table_location = [i.split("-")[1:3] for i in table_names]
 
-    schema = Schema(table_ID=TEXT(),
+    schema = Schema(title=TEXT(stored=True),
                     page_title=TEXT(analyzer=StemmingAnalyzer()),
                     col_title=TEXT(analyzer=StemmingAnalyzer()),
                     body=TEXT(analyzer=StemmingAnalyzer()),
@@ -52,7 +52,7 @@ def create_index(archive_name_path, archive_data_path, target_dir):
                 data_cap = data["caption"]
 
                 writer = ix.writer()
-                writer.add_document(table_ID=table_id,
+                writer.add_document(title=table_id,
                                     page_title=data_pt,
                                     col_title=data_ct,
                                     body=data_b,
@@ -102,10 +102,10 @@ def main():
 def get_results(ix, queries, qrels):
     results = defaultdict()
     for query in queries:
+        parser = MultifieldParser(["title", "page_title", "col_title", "body", "sec_title", "caption"], ix.schema)
+        myquery = parser.parse(queries[0][1])
         with ix.searcher() as searcher:
-            parser = QueryParser("content", ix.schema)
-            myquery = parser.parse(queries[0][1])
-            results[query] = searcher.search(myquery)
+            results[tuple(query)] = searcher.search(myquery)
 
 
 if __name__ == "__main__":
