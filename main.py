@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import csv
 import json as js
+import math
 import os
 import os.path
 from collections import defaultdict
@@ -11,11 +12,40 @@ from whoosh.analysis import StemmingAnalyzer
 from whoosh.fields import Schema, TEXT
 from whoosh.qparser import MultifieldParser
 
+archive_name_path = "qrels.csv"
+archive_data_path = "tables/"
+target_dir = "index"
 
-def create_index(archive_name_path, archive_data_path, target_dir):
-    num_lines = sum(1 for line in open(archive_name_path))
+
+def parse_queries():
+    results = []
+    with open("queries.csv", newline="") as file:
+        reader = csv.reader(file)
+        iter_reader = iter(reader)
+        next(iter_reader)
+        for line in iter_reader:
+            results.append(line)
+    return results
+
+
+def parse_qrels():
+    results = defaultdict(lambda: defaultdict(int))
+    with open("qrels.csv", newline="") as file:
+        reader = csv.reader(file)
+        iter_reader = iter(reader)
+        next(iter_reader)
+        for line in iter_reader:
+            results[line[0]][line[2]] = int(line[3])
+    return results
+
+
+def create_index(query):
     with open(archive_name_path, 'r') as file:
         table_names = file.readlines()
+
+    iter_tables = iter(table_names)
+    next(iter_tables)
+    queries = [x.strip().split(",")[0] for x in iter_tables]
 
     iter_tables = iter(table_names)
     next(iter_tables)
@@ -29,19 +59,17 @@ def create_index(archive_name_path, archive_data_path, target_dir):
                     sec_title=TEXT(analyzer=StemmingAnalyzer()),
                     caption=TEXT(analyzer=StemmingAnalyzer()))
 
-    if not os.path.exists(target_dir):
-        os.mkdir(target_dir)
-    ix = index.create_in(target_dir, schema)
+    if not os.path.exists(target_dir + query):
+        os.mkdir(target_dir + query)
+    ix = index.create_in(target_dir + query, schema)
     not_found = []
-    count = 0
-    for location in table_location:
+    for table_query, location in zip(queries, table_location):
+        if table_query != query:
+            continue
+
         with open(archive_data_path + "re_tables-" + location[0] + ".json") as f:
             data = js.load(f)
             table_id = "table-" + location[0] + "-" + location[1]
-            print(str(float(count) / float(num_lines)))
-            count += 1
-            if count > 62:
-                break
 
             if table_id in data:
                 data = data[table_id]
@@ -65,47 +93,34 @@ def create_index(archive_name_path, archive_data_path, target_dir):
     return ix
 
 
-def parse_queries():
-    pass
+def get_results(searcher, schema, query):
+    parser = MultifieldParser(["title", "page_title", "col_title", "body", "sec_title", "caption"], schema)
+    myquery = parser.parse(query[1])
+    return searcher.search(myquery, limit=20)
 
 
-def parse_qrels():
-    results = defaultdict(lambda: defaultdict(int))
-    with open("qrels.csv", newline="") as file:
-        reader = csv.reader(file)
-        iter_reader = iter(reader)
-        next(iter_reader)
-        for line in iter_reader:
-            results[line[0]][line[2]] = int(line[3])
-    return results
+def evaluate_results(query, results, qrels):
+    score = 0
+    for i in range(len(results.top_n)):
+        score += float(qrels[query][results[i]["title"]]) / math.log(i + 2, 2)
+    return score
 
 
 def main():
-    archive_name_path = "qrels.csv"
-    archive_data_path = "tables/"
-    target_dir = "index"
-    ix = create_index(archive_name_path, archive_data_path, target_dir)
     queries = parse_queries()
     qrels = parse_qrels()
-
-    queries = [[1, "world interest rates table\n"],
-               [2, "2008 beijing olympics\n"],
-               [3, "fast cars\n"]]
-
-    results = get_results(ix, queries, qrels)
-
-    # to do:
-    # - incorporting BM 25 scores in index (or TF or DF into the postings of each
-    # term)
-
-
-def get_results(ix, queries, qrels):
-    results = defaultdict()
+    scores = []
     for query in queries:
-        parser = MultifieldParser(["title", "page_title", "col_title", "body", "sec_title", "caption"], ix.schema)
-        myquery = parser.parse(queries[0][1])
+        ix = create_index(query[0])
         with ix.searcher() as searcher:
-            results[tuple(query)] = searcher.search(myquery)
+            results = get_results(searcher, ix.schema, query)
+            score = evaluate_results(query[0], results, qrels)
+            print(str(query) + " - " + str(score))
+            scores.append((query, score))
+    with open("lexical.csv", "w+") as file:
+        csv_writer = csv.writer(file)
+        for score in scores:
+            csv_writer.writerow([int(score[0][0]), score[1]])
 
 
 if __name__ == "__main__":
