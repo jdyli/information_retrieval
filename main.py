@@ -55,13 +55,16 @@ def create_index(archive_name_path, archive_data_path, target_dir):
             else:
                 not_found.append(table_id)
     print(not_found)
+    return ix
 
 
 def main():
     archive_name_path = "qrels.csv"
     archive_data_path = "tables/"
     target_dir = "index"
-    create_index(archive_name_path, archive_data_path, target_dir)
+    index = create_index(archive_name_path, archive_data_path, target_dir)
+    queries = parse_queries()
+
 
     # to do:
     # - incorporting BM 25 scores in index (or TF or DF into the postings of each
