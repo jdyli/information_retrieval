@@ -8,6 +8,7 @@ import os.path
 from whoosh import index
 from whoosh.analysis import StemmingAnalyzer
 from whoosh.fields import Schema, TEXT
+from whoosh.qparser import QueryParser
 
 
 def create_index(archive_name_path, archive_data_path, target_dir):
@@ -56,17 +57,34 @@ def create_index(archive_name_path, archive_data_path, target_dir):
                 not_found.append(table_id)
     print(not_found)
 
+def query_parser(querylist, myschema):
+    parsed_list = []
+    parser = QueryParser("content", schema=myschema)
+
+    with open(querylist, 'r') as file:
+        list_of_queries = file.readlines()[1:]
+        for query in list_of_queries:
+            query_name = query.split(",",1)[1]
+            parsed_list.append(parser.parse(query_name))
+
+    return parsed_list
+    
+    
+
 
 def main():
     archive_name_path = "qrels.csv"
     archive_data_path = "tables/"
+    archive_query_path = "queries.csv"
     target_dir = "index"
-    create_index(archive_name_path, archive_data_path, target_dir)
+    #create_index(archive_name_path, archive_data_path, target_dir)
 
     # to do:
     # - incorporting BM 25 scores in index (or TF or DF into the postings of each
     # term)
 
+    parsed_list = query_parser(archive_query_path, None)
+    print(parsed_list[55])
 
 if __name__ == "__main__":
     main()
