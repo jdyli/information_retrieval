@@ -25,7 +25,7 @@ def parse_qrels():
         iter_reader = iter(reader)
         next(iter_reader)
         for line in iter_reader:
-            results[line[0]][line[2]] = int(line[3])
+            results[int(line[0]) - 1][line[2]] = int(line[3])
     return results
 
 
