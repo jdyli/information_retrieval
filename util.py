@@ -29,10 +29,12 @@ def parse_qrels():
     return results
 
 
-def get_max_score(list_size):
+def get_max_score(query, qrels):
     score = 0
-    for i in range(list_size):
-        score += 2.0 / math.log(i + 2, 2)
+    i = 1
+    for table, assessment in qrels[query].items():
+        score += (2.0 ** assessment - 1) / math.log(i + 1, 2)
+        i += 1
     return score
 
 
@@ -40,4 +42,4 @@ def evaluate_results(query, results, qrels):
     score = 0
     for i in range(len(results.top_n)):
         score += (2 ** (float(qrels[query][results[i]["title"]])) - 1) / math.log(i + 2, 2)
-    return score / max(0.0000001, get_max_score(len(results.top_n)))
+    return score / max(0.0000001, get_max_score(query, qrels))
