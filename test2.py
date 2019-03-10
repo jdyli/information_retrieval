@@ -1,4 +1,4 @@
-from CoorAscent import CoorAscent
+from CoorAscent import CoordinateAscent
 
 
 def e(params):  # Objective function
@@ -10,4 +10,4 @@ def e(params):  # Objective function
 
 params = {'x': 1.0, 'y': 23.0, 'z': 456.0}  # Arbitrary initial values
 
-print(CoorAscent(e).learn(params))  # => {'x': -1.0, 'y': -10.0, 'z': -50.0}
+print(CoordinateAscent(e).learn(params))  # => {'x': -1.0, 'y': -10.0, 'z': -50.0}

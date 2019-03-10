@@ -4,7 +4,7 @@ from functools import reduce
 from whoosh import index
 from whoosh.qparser import MultifieldParser
 
-from CoorAscent import CoorAscent
+from CoorAscent import CoordinateAscent
 from util import evaluate_results, parse_queries, parse_qrels
 
 archive_name_path = "qrels.csv"
@@ -44,7 +44,7 @@ def main():
         "sec_title": 1. / 5,
         "caption": 1. / 5
     }
-    best_params = CoorAscent(run).learn(initial_weights)
+    best_params = CoordinateAscent(run).learn(initial_weights)
     print(best_params)
     print("Average normalized score = " + str(run(best_params)))
 
