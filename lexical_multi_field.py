@@ -25,7 +25,7 @@ def get_results(searcher, schema, query, weights):
 def run(weights):
     scores = []
     for query in Holder.queries:
-        ix = index.open_dir(target_dir + query[0])
+        ix = index.open_dir(target_dir + str(query[0]))
         with ix.searcher() as searcher:
             results = get_results(searcher, ix.schema, query, weights)
             score = evaluate_results(query[0], results, Holder.qrels)

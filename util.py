@@ -14,7 +14,7 @@ def parse_queries():
         iter_reader = iter(reader)
         next(iter_reader)
         for line in iter_reader:
-            results.append(line)
+            results.append([int(line[0]) - 1, line[1]])
     return results
 
 

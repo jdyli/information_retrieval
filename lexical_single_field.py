@@ -18,7 +18,7 @@ def main():
     qrels = parse_qrels()
     scores = []
     for query in queries:
-        ix = index.open_dir(target_dir + query[0])
+        ix = index.open_dir(target_dir + str(query[0]))
         with ix.searcher() as searcher:
             results = get_results(searcher, ix.schema, query)
             score = evaluate_results(query[0], results, qrels)

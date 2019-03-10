@@ -14,7 +14,7 @@ def create_index(query):
 
     iter_tables = iter(table_names)
     next(iter_tables)
-    queries = [x.strip().split(",")[0] for x in iter_tables]
+    queries = [int(x.strip().split(",")[0]) - 1 for x in iter_tables]
 
     iter_tables = iter(table_names)
     next(iter_tables)
@@ -28,9 +28,9 @@ def create_index(query):
                     sec_title=TEXT(analyzer=StemmingAnalyzer()),
                     caption=TEXT(analyzer=StemmingAnalyzer()))
 
-    if not os.path.exists(target_dir + query):
-        os.mkdir(target_dir + query)
-    ix = index.create_in(target_dir + query, schema)
+    if not os.path.exists(target_dir + str(query)):
+        os.mkdir(target_dir + str(query))
+    ix = index.create_in(target_dir + str(query), schema)
     not_found = []
     for table_query, location in zip(queries, table_location):
         if table_query != query:
