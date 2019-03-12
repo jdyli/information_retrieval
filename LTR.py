@@ -1,10 +1,7 @@
 import csv
-from functools import reduce
 from math import log
 
-import numpy as np
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import KFold
 
 from util import parse_queries, parse_qrels
 
@@ -39,13 +36,6 @@ def parse_features():
     return results
 
 
-def evaluate_results(predictions, values):
-    score = 0
-    # for i in range(len(predictions)):
-    #     score += (2 ** (float(qrels[query][results[i]["title"]])) - 1) / math.log(i + 2, 2)
-    # return score / max(0.0000001, get_max_score(query, qrels))
-
-
 def main():
     queries = parse_queries()
     qrels = parse_qrels()
@@ -66,7 +56,8 @@ def main():
         clf.fit(X, y)
         scores = []
         for i in range(int(len(queries) / 5)):
-            results = clf.predict([[xx for xx in table_features.values()] for table_features in features[fold * int(len(queries) / 5) + i]])
+            results = clf.predict([[xx for xx in table_features.values()] for table_features in
+                                   features[fold * int(len(queries) / 5) + i]])
             results_with_score = list(zip(results, [yy for yy in qrels[fold * int(len(queries) / 5) + i].values()]))
 
             results_with_score_sorted_on_prediction = results_with_score.copy()
