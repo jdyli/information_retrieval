@@ -12,7 +12,6 @@ to find a local optimum for the parameters. It shows the average normalized NDCG
 of locally optimal parameters.
 """
 
-
 archive_name_path = "qrels.csv"
 archive_data_path = "tables/"
 target_dir = "index"

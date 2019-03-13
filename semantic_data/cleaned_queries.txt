@@ -1,0 +1,60 @@
+1,world   interest   rate   tabl  
+2,beij   olymp  
+3,fast   car  
+4,cloth   size  
+5,phase   moon  
+6,usa   popul   state  
+7,prime   minist   england  
+8,ipod   model  
+9,bittorr   client  
+10,olympu   digit   slr  
+11,composit   sun  
+12,run   shoe  
+13,fuel   consumpt  
+14,stock   quot   tabl  
+15,top   gross   movi  
+16,nutrit   valu  
+17,state   capit   largest   citi   us  
+18,profession   wrestler  
+19,compani   incom   statement  
+20,dog   breed  
+21,ibanez   guitar  
+22,use   cellphon  
+23,world   religion  
+24,stock  
+25,academi   award  
+26,olymp   gold   medal   winner  
+27,currenc   differ   countri  
+28,scienc   discoveri  
+29,pga   leaderboard  
+30,pain   medic  
+31,footbal   club   citi  
+32,healthi   food   cost  
+33,capit   attract  
+34,diseas   mortal  
+35,cigarett   brand   market   share  
+36,appl   market   share  
+37,healthi   food   nutrit   valu  
+38,hormon   effect  
+39,household   chemic   strength  
+40,lake   altitud  
+41,laptop   cpu  
+42,asian   countri   currenc  
+43,diseas   risk  
+44,extern   drive   capac  
+45,basebal   team   captain  
+46,maryland   counti   popul  
+47,countri   capit  
+48,diseas   incid  
+49,eu   countri   year   join  
+50,irish   counti   area  
+51,cereal   nutrit   valu  
+52,erp   system   price  
+53,cat   life   span  
+54,broadway   music   director  
+55,infect   treatment  
+56,food   type  
+57,board   game   number   player  
+58,googl   product   review  
+59,constel   closest   constel  
+60,game   age 

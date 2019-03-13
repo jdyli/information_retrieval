@@ -63,7 +63,6 @@ def create_index(query):
                 writer.commit()
             else:
                 not_found.append(table_id)
-    print(not_found)
     return ix
 
 
