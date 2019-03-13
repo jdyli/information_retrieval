@@ -7,6 +7,11 @@ from whoosh.fields import Schema, TEXT
 
 from util import archive_name_path, target_dir, archive_data_path, parse_queries
 
+"""
+This file should be run before running lexical_single_field or lexical_multi_field. It builds for every query a separate
+index containing the tables that were assessed by human judges for their relevance to the query.
+"""
+
 
 def create_index(query):
     with open(archive_name_path, 'r') as file:

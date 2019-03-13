@@ -5,6 +5,13 @@ from sklearn.ensemble import RandomForestRegressor
 
 from util import parse_queries, parse_qrels
 
+"""
+Implementation of the LTR baseline. Reads the features from the feature.csv file and uses Random Forests to learn to
+assess the relevance of tables to a query. 5-fold cross-validation is used to get more reliable estimations.
+"""
+
+k = 20
+
 
 def parse_features():
     results = []
@@ -63,13 +70,13 @@ def main():
             results_with_score_sorted_on_prediction = results_with_score.copy()
             results_with_score_sorted_on_prediction.sort(key=lambda x: x[0], reverse=True)
             score = 0
-            for j in range(20):
+            for j in range(k):
                 score += (2 ** round(results_with_score[j][1]) - 1) / log(i + 2, 2)
 
             results_with_score_sorted_on_value = results_with_score.copy()
             results_with_score_sorted_on_value.sort(key=lambda x: x[1], reverse=True)
             max_score = 0
-            for j in range(20):
+            for j in range(k):
                 max_score += results_with_score_sorted_on_value[j][1]
             scores.append(score / max(0.0000001, max_score))
         total_score = sum(scores) / len(scores)

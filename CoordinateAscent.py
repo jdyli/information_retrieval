@@ -1,5 +1,10 @@
 from random import shuffle
 
+"""
+This file is based on https://github.com/tmanabe/coordinate-ascent. The original code was modified to use different
+parameters, normalize the parameters to a length of 1, and enforcing all parameters to be positive.
+"""
+
 
 class CoordinateAscent(object):
     def __init__(self, evaluate, n_restart=1, n_max_iteration=1, step_base=0.05, step_scale=2.0, tolerance=0.001):
@@ -68,7 +73,6 @@ class CoordinateAscent(object):
                     else:
                         consecutive_fails += 1
                         params = original_value
-                    print("params: " + str(params))
 
                 if best_score - start_score < self.tolerance:
                     break
