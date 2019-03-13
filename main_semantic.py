@@ -82,7 +82,7 @@ if __name__ == "__main__":
         scores.append((query[0], ndcg_score))
 
         # Save results in csv file
-        with open(path + "/semantic_data/semantic_nobody_score_wmd.csv", "w+") as file:
+        with open(path + "/semantic_data/semantic_nobody_score.csv", "w+") as file:
             csv_writer = csv.writer(file)
             for score in scores:
                 csv_writer.writerow([score[0], score[1]])
