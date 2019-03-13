@@ -9,18 +9,17 @@ from nltk.corpus import stopwords
 from util import archive_name_path, target_dir, archive_data_path, parse_queries
 
 porter_stemmer = PorterStemmer()
+stop_words = set(stopwords.words('english'))
 
 
 def clean_up(sentence):
     sentence = sentence.lower()
     sentence = word_tokenize(sentence)
-    stop_words = set(stopwords.words('english'))
     sentence = [w for w in sentence if not w in stop_words] # remove stopwords
     sentence = [w for w in sentence if w.isalpha()] # remove numbers and punctuation
     stem_sentence = []
     for word in sentence:
         stem_sentence.append(porter_stemmer.stem(word))
-        stem_sentence.append(" ")
     return " ".join(stem_sentence)
 
 def create_index(query):
@@ -36,13 +35,15 @@ def create_index(query):
     table_names = [x.strip().split(",")[2] for x in iter_tables]
     table_location = [i.split("-")[1:3] for i in table_names]
     not_found = []
+    filewriter = open("semantic_data/index_body/" + str(query) + ".txt", "a+")
     for table_query, location in zip(queries, table_location):
         if table_query != query:
             continue
 
+        table_stem = "table-" + location[0] + "-"
         with open(archive_data_path + "re_tables-" + location[0] + ".json") as f:
             data = json.load(f)
-            table_id = "table-" + location[0] + "-" + location[1]
+            table_id = table_stem + location[1]
 
             if table_id in data:
                 data = data[table_id]
@@ -61,11 +62,10 @@ def create_index(query):
                 query_line = "%s %s" % (str(table_id), 
                                  str(cleaned_query_line))
 
-                filewriter = open("semantic_data/index_body/" + str(query) + ".txt", "a+")
                 filewriter.write(query_line + "\n")
-                filewriter.close()
             else:
                 not_found.append(table_id)
+    filewriter.close()
     print(not_found)
 
 def create_query():
