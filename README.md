@@ -1,5 +1,6 @@
 # information_retrieval
 Group 25
+
 Authors
 - Jody Liu, 4920392
 - Joost Verbraeken, 4475208
