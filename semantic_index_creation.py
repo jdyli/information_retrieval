@@ -52,16 +52,12 @@ def create_index(query):
                 data_sect = data["secondTitle"]
                 data_cap = data["caption"]
                 
-                query_line = "%s" % str(data_b)
-                """(str(data_pt), 
-                                 str(data_ct),
-                                 str(data_sect),
-                                 str(data_cap))"""
+                query_line = "%s %s %s %s %s" % (str(data_b), str(data_pt), str(data_ct), str(data_sect), str(data_cap))
                 cleaned_query_line = clean_up(query_line)
                 query_line = "%s %s" % (str(table_id), 
                                  str(cleaned_query_line))
 
-                filewriter = open("semantic_data/index_body/" + str(query) + ".txt", "a+")
+                filewriter = open("semantic_data/index_all/" + str(query) + ".txt", "a+")
                 filewriter.write(query_line + "\n")
                 filewriter.close()
             else:
@@ -73,7 +69,7 @@ def create_query():
         reader = csv.reader(file)
         iter_reader = iter(reader)
         next(iter_reader)
-        filewriter = open("cleaned_queries.txt", "+a")
+        filewriter = open("semantic_data/cleaned_queries.txt", "+a")
         for line in iter_reader:
             cleaned_line = clean_up(line[1])
             filewriter.write(line[0] + "," + cleaned_line + "\n")
