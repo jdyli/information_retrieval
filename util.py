@@ -1,7 +1,5 @@
 import csv
 import math
-#import io
-
 from collections import defaultdict
 
 archive_name_path = "qrels.csv"
