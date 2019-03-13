@@ -57,25 +57,25 @@ if __name__ == "__main__":
     path = os.path.abspath(os.path.curdir)
     tmp_file = get_tmpfile(path + "/semantic_data/gensim_word2vec.txt")
     model = KeyedVectors.load_word2vec_format(tmp_file)
-    #termsim_index = WordEmbeddingSimilarityIndex(model.wv) #cos
+    termsim_index = WordEmbeddingSimilarityIndex(model.wv) #cos
 
     # compute the top 20 tables based on a query
     list_of_queries = get_queries()
     for query in list_of_queries:
         table_corpus = get_query_table(query[0])
-        #dictionary = Dictionary(table_corpus) #cos
-        #bow_corpus = [dictionary.doc2bow(table) for table in table_corpus] #cos
-        #similarity_matrix = SparseTermSimilarityMatrix(termsim_index, dictionary)  # cos: construct similarity matrix
-        #instance = SoftCosineSimilarity(bow_corpus, similarity_matrix, num_best=20) #cos
-        #sims = instance[dictionary.doc2bow(query[1].split())] #cos
-        instance = WmdSimilarity(table_corpus, model, num_best=10) #wmd
-        sims = instance[query[1]] #wmd
+        dictionary = Dictionary(table_corpus) #cos
+        bow_corpus = [dictionary.doc2bow(table) for table in table_corpus] #cos
+        similarity_matrix = SparseTermSimilarityMatrix(termsim_index, dictionary)  # cos: construct similarity matrix
+        instance = SoftCosineSimilarity(bow_corpus, similarity_matrix, num_best=20) #cos
+        sims = instance[dictionary.doc2bow(query[1].split())] #cos
+        #instance = WmdSimilarity(table_corpus, model, num_best=10) #wmd
+        #sims = instance[query[1]] #wmd
         results = defaultdict(lambda: defaultdict(int))
         print('Query: ', query)
         for i in range(len(sims)):
             print()
             print('sim = %.4f' % sims[i][1])
-            print(table_corpus[sims[i][0]][0]) # table_corpus
+            print(table_corpus[sims[i][0]][0])
             line = table_corpus[sims[i][0]][0]
             results[i]['title'] = line
         ndcg_score = evaluate_results(query[0], results, qrels, k)
