@@ -95,4 +95,3 @@ if __name__ == "__main__":
                 csv_writer.writerow([score[0], score[1]])
         print("Average normalized score = " + str(
             reduce(lambda x, y: (0, x[1] + y[1]), scores)[1] / len(scores)))
-[]
