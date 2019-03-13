@@ -18,7 +18,8 @@ from functools import reduce
 def load_pretrained_glove_model():
     path = os.path.abspath(os.path.curdir)
     glove_file = datapath(path + '/semantic_data/glove.6B.300d.txt')
-    tmp_file = get_tmpfile(path + "/semantic_data/glove.6B.300d.txt.word2vec")
+    tmp_file = get_tmpfile(path + "/semantic_data/glove.word2vec.txt")
+    #tmp_file = get_tmpfile(path + "/semantic_data/glove.6B.300d.txt.word2vec")
     _ = glove2word2vec(glove_file, tmp_file)
     return KeyedVectors.load_word2vec_format(tmp_file, binary=False)
 
@@ -55,8 +56,9 @@ if __name__ == "__main__":
     scores = []
     qrels = parse_qrels()
     path = os.path.abspath(os.path.curdir)
-    tmp_file = get_tmpfile(path + "/semantic_data/gensim_word2vec.txt")
-    model = KeyedVectors.load_word2vec_format(tmp_file)
+    #tmp_file = get_tmpfile(path + "/semantic_data/gensim_word2vec.txt")
+    #model = KeyedVectors.load_word2vec_format(tmp_file)
+    model = load_pretrained_glove_model()
     termsim_index = WordEmbeddingSimilarityIndex(model.wv) #cos
 
     # compute the top 20 tables based on a query
@@ -82,7 +84,7 @@ if __name__ == "__main__":
         scores.append((query[0], ndcg_score))
 
         # Save results in csv file
-        with open(path + "/semantic_data/semantic_nobody_score.csv", "w+") as file:
+        with open(path + "/semantic_data/semantic_nobody_score_2.csv", "w+") as file:
             csv_writer = csv.writer(file)
             for score in scores:
                 csv_writer.writerow([score[0], score[1]])
