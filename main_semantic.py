@@ -35,20 +35,21 @@ def get_queries():
     lines = [[int(line[0])-1, line[1]] for line in lines]
     return lines
 
-def get_max_score(query, qrels):
+def get_max_score(query, qrels, k):
     score = 0
-    i = 1
+    i = 0
     for table, assessment in qrels[query].items():
-        score += (2.0 ** assessment - 1) / math.log(i + 1, 2)
         i += 1
+        if i > k:
+            break
+        score += (2.0 ** assessment - 1) / math.log(i + 1, 2)
     return score
 
 def evaluate_results(query, results, qrels, k):
     score = 0
-    for i in range(0, k):
+    for i in range(0, k-1):
         score += (2 ** (float(qrels[query][results[i]["title"]])) - 1) / math.log(i + 2, 2)
-        print(score)
-    return score / max(0.0000001, get_max_score(query, qrels))
+    return score / max(0.0000001, get_max_score(query, qrels, k))
 
 if __name__ == "__main__":
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
