@@ -1,11 +1,8 @@
 # information_retrieval
+Group 25
+Authors
+- Jody Liu, 4920392
+- Joost Verbraeken, 4475208
+- Rommy Gobardhan, 4124227
 
-update Rommy: 
-
-- create index maakt op dit moment alleen een index op de tables die geranked zijn door de users. 
-
-Nog te doen (meeting vandaag):
-- Kijken naar welke preprocessing methods we kunnen toepassen voordat de index wordt gemaakt (heeft wel invloed op de retrieval performance).
-- Uitzoeken hoe BM25 precies wordt geintegreerd door whoosh.
-- Uitzoeken hoe de IR system geranked kan worden door NDCG
-- Alvast een template maken voor de report
+While conventional information retrieval methods focus mostly on retrieving documents or images that are relevant to a query, tables also often contain valuable information in a structured way. Last year, Zhang et Balog published a paper where they proposed several new table retrieval methods which were considerably more accurate than a state-of-the-art baseline. This Github repositoy contains the code that accompanies the paper in which we reproduce all lexical baseline methods and the semantic word embedding method.
